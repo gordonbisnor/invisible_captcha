@@ -23,11 +23,16 @@ module InvisibleCaptcha
     end
 
     def on_timestamp_spam_action(options = {})
+      
       if action = options[:on_timestamp_spam]
         send(action)
       else
-        redirect_to :back, flash: { error: InvisibleCaptcha.timestamp_error_message }
+        redirect_back fallback_location: fallback_location(options), flash: { error: InvisibleCaptcha.timestamp_error_message }
       end
+    end
+    
+    def fallback_location(options)
+      options[:fallback_location].presence || root_path
     end
 
     def on_spam_action(options = {})
